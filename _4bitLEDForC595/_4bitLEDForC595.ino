@@ -29,7 +29,7 @@
       pinMode(RCLK,OUTPUT);
       pinMode(DIO,OUTPUT); //让三个脚都是输出状态
 
-      numberOfDisplay=99;
+      numberOfDisplay=6789;
     }
     void loop()
     {
@@ -59,7 +59,7 @@
    }
    void turnOff(){
      for(int i=0;i<numerOfDigits;i++){
-         displayNumberAtIndex(0,digits[i],true);
+         displayNumberAtIndex(1,digits[i],false);
       }
     }
 
@@ -94,8 +94,8 @@
        }
        else
        {
-          digitalWrite(RCLK,HIGH);
-          digitalWrite(RCLK,LOW);
+          //digitalWrite(RCLK,HIGH);
+          //digitalWrite(RCLK,LOW);
         }
     }
     
