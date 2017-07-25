@@ -5,7 +5,7 @@
 
     
     const int debounceDelay=10;//开头防抖延迟毫秒数
-    const int swithDigit=8;//开关针脚
+    const int swithDigit=19;//开关针脚
     bool initShow=true;
     String serialString="";
     bool readCompleted=false;
@@ -29,7 +29,7 @@
       pinMode(RCLK,OUTPUT);
       pinMode(DIO,OUTPUT); //让三个脚都是输出状态
 
-      numberOfDisplay=6789;
+      numberOfDisplay=100;
     }
     void loop()
     {
@@ -45,10 +45,6 @@
        }
        else
        {
-//        if(!switchValue){
-//          initShow=!initShow;
-//         } 
-          initShow=false;
           turnOff();
         }
         
@@ -57,10 +53,10 @@
     digitalWrite(swithDigit,HIGH);
     initShow=true;
    }
+   void( *resetFunc) (void) = 0;
    void turnOff(){
-     for(int i=0;i<numerOfDigits;i++){
-         displayNumberAtIndex(1,digits[i],false);
-      }
+      digitalWrite(swithDigit,LOW);
+      initShow=false;
     }
 
     void DisplayNumber(int number){
@@ -91,6 +87,7 @@
           LED_OUT(index);    
           digitalWrite(RCLK,LOW);
           digitalWrite(RCLK,HIGH);
+          digitalWrite(RCLK,LOW);
        }
        else
        {
@@ -115,6 +112,7 @@
     		X<<=1;
                 digitalWrite(SCLK,LOW);
                 digitalWrite(SCLK,HIGH);
+                digitalWrite(SCLK,LOW);
     	}
     }
 //串口事件-用于读取串口消息
@@ -156,19 +154,19 @@ void hanldeMessageFromSerial(String message){
       msgBody=message.substring(splitCharPosition+1,message.length());
     }
     if(msgType=="turn_off"){
-      digitalWrite(swithDigit,LOW);
+      turnOff();
      }
      else if(msgType=="turn_on"){
-      digitalWrite(swithDigit,HIGH);
+      turnOn();
      }
-     else if(msgType=="SN"){
+     else if(msgType=="sn"){
         Serial.println(SN);
      }
-     else if(msgType=="test_number"){
+     else if(msgType=="show_number"){
         numberOfDisplay=msgBody.toInt();
         turnOn();
       }
-      else if(msgType=="receive_order"){
+      else if(msgType=="send_order"){
          int orderPosition=msgBody.indexOf('/');
          String ordNo_P_No="";
          String ord_number="";
