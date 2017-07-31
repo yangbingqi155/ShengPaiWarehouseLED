@@ -6,7 +6,7 @@
     
     const int debounceDelay=10;//开头防抖延迟毫秒数
     const int swithDigit=19;//开关针脚
-    bool initShow=true;
+    bool initShow=false;
     String serialString="";
     bool readCompleted=false;
 
@@ -42,6 +42,7 @@
       boolean switchValue=digitalRead(swithDigit);
       if(switchValue&&initShow){
         DisplayNumber (numberOfDisplay);
+        //Serial.println("aaaa");
        }
        else
        {
@@ -54,11 +55,14 @@
     initShow=true;
    }
    void( *resetFunc) (void) = 0;
-   void turnOff(){
-      digitalWrite(swithDigit,LOW);
-      initShow=false;
+  void turnOff(){
+      if(initShow){
+        initShow=false;
+        //if(!digitalRead(swithDigit)){
+          //Serial.println("turn off LED");
+        //}
+      }
     }
-
     void DisplayNumber(int number){
       for(int i=0;i<numerOfDigits;i++){
          int digitalNumer=number%10;
