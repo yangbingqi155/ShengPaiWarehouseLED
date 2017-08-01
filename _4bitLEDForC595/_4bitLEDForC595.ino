@@ -9,6 +9,7 @@
     bool initShow=false;
     String serialString="";
     bool readCompleted=false;
+    String orderInfo="";
 
     int numberOfDisplay=0;
     unsigned char LED_0F[] = 
@@ -42,7 +43,6 @@
       boolean switchValue=digitalRead(swithDigit);
       if(switchValue&&initShow){
         DisplayNumber (numberOfDisplay);
-        //Serial.println("aaaa");
        }
        else
        {
@@ -58,9 +58,10 @@
   void turnOff(){
       if(initShow){
         initShow=false;
-        //if(!digitalRead(swithDigit)){
-          //Serial.println("turn off LED");
-        //}
+        if(!digitalRead(swithDigit)){
+          //返回订单信息
+          Serial.println(orderInfo);
+        }
       }
     }
     void DisplayNumber(int number){
@@ -164,13 +165,14 @@ void hanldeMessageFromSerial(String message){
       turnOn();
      }
      else if(msgType=="sn"){
-        Serial.println(SN);
+        Serial.println(msgType+"|"+SN);
      }
      else if(msgType=="show_number"){
         numberOfDisplay=msgBody.toInt();
         turnOn();
       }
       else if(msgType=="send_order"){
+        orderInfo=message;
          int orderPosition=msgBody.indexOf('/');
          String ordNo_P_No="";
          String ord_number="";
