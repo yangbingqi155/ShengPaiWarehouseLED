@@ -6,12 +6,12 @@
     
     const int debounceDelay=10;//开头防抖延迟毫秒数
     const int swithDigit=19;//开关针脚
-    bool initShow=false;
+    bool initShow=true;
     String serialString="";
     bool readCompleted=false;
     String orderInfo="";
 
-    int numberOfDisplay=0;
+    int numberOfDisplay=100;
     unsigned char LED_0F[] = 
     {// 0	 1	  2	   3	4	 5	  6	   7	8	 9	  A	   b	C    d	  E    F    -
     	0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90,0x8C,0xBF,0xC6,0xA1,0x86,0xFF,0xbf
@@ -29,8 +29,6 @@
       pinMode(SCLK,OUTPUT);
       pinMode(RCLK,OUTPUT);
       pinMode(DIO,OUTPUT); //让三个脚都是输出状态
-
-      numberOfDisplay=100;
     }
     void loop()
     {
@@ -40,13 +38,15 @@
       serialString="";
       }
       
-      boolean switchValue=digitalRead(swithDigit);
+      boolean switchValue=debounce(swithDigit);
       if(switchValue&&initShow){
         DisplayNumber (numberOfDisplay);
        }
        else
        {
-          turnOff();
+          if(!switchValue){
+            turnOff();
+          }
         }
         
     }
@@ -56,13 +56,14 @@
    }
    void( *resetFunc) (void) = 0;
   void turnOff(){
-      if(initShow){
-        initShow=false;
-        if(!digitalRead(swithDigit)){
-          //返回订单信息
-          Serial.println(orderInfo);
-        }
-      }
+      initShow=!initShow;
+//      if(initShow){
+//        initShow=false;
+//        if(!digitalRead(swithDigit)){
+//          //返回订单信息
+//          Serial.println(orderInfo);
+//        }
+//      }
     }
     void DisplayNumber(int number){
       for(int i=0;i<numerOfDigits;i++){
