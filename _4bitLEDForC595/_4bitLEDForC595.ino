@@ -37,17 +37,19 @@
       readCompleted=false;
       serialString="";
       }
-      
-      boolean switchValue=debounce(swithDigit);
-      if(switchValue&&initShow){
-        DisplayNumber (numberOfDisplay);
-       }
-       else
-       {
-          if(!switchValue){
-            turnOff();
+      //if(debounce(swithDigit)){
+        boolean switchValue=debounce(swithDigit);
+        if(switchValue&&initShow){
+          DisplayNumber (numberOfDisplay);
+         }
+         else
+         {
+            if(!switchValue){
+              turnOff();
+            }
           }
-        }
+      //}
+      
         
     }
   void turnOn(){
@@ -199,9 +201,13 @@ boolean debounce(int pin){
     delay(1);
     state=digitalRead(pin);
     if(state!=previousState){
-        counter=0;
-        previousState=state;
+        break;
+        
       }
+      else{
+        previousState=state;
+        break;
+        }
     }
   return state;
 }
